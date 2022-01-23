@@ -21,83 +21,16 @@ struct Node
         left = right = NULL;
     }
 };
-
-vector<int> zigZagTraversal(Node* root)
-{
-    vector<int> ans;
-    if(root==NULL)
-        return ans;
-    queue<Node*> q;
-    stack<int> s;
-    q.push(root);
-    bool reverse = false;
-    while(!q.empty()){
-        int count = q.size();
-        for (int i = 0; i < count; i++)
-        {
-            Node* curr = q.front();
-            q.pop();
-
-            if(reverse)
-                s.push(curr->data);
-            else
-                ans.push_back(curr->data);
-
-            if(curr->left!=NULL)
-                q.push(curr->left);
-            
-            if(curr->right!=NULL)
-                q.push(curr->right);
-        }
-        if(reverse){
-            while(!s.empty()){
-                ans.push_back(s.top());
-                s.pop();
-            }
-        }
-        reverse = !reverse;
-    }
-    return ans;
+vector<int> solve_longPath(Node* root){
+    if(!root) return {0, 0};
+    vector<int> a = solve_longPath(root->left);
+    vector<int> b = solve_longPath(root->right);
+    if(a[0]>b[0]) return {a[0]+1, a[1]+root->data};
+    
 }
-vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
-    vector<vector<int>> ans;
-
-    if(root==NULL)
-        return ans;
-    queue<TreeNode*> q;
-    stack<int> s;
-    q.push(root);
-    bool reverse = false;
-    while(!q.empty()){
-        vector<int> t;
-        int count = q.size();
-        for (int i = 0; i < count; i++)
-        {
-            TreeNode* curr = q.front();
-            q.pop();
-
-            if(reverse)
-                s.push(curr->val);
-            else
-                t.push_back(curr->val);
-
-            if(curr->left!=NULL)
-                q.push(curr->left);
-            
-            if(curr->right!=NULL)
-                q.push(curr->right);
-        }
-        if(reverse){
-            while(!s.empty()){
-                t.push_back(s.top());
-                s.pop();
-            }
-        }
-        reverse = !reverse;
-        ans.push_back(t);
-        t.clear();
-    }
-    return ans;
+int sumOfLongRootToLeafPath(Node *root)
+{
+    //code here
 }
 int main()
 {
@@ -106,18 +39,14 @@ int main()
     // 20       30
     //   /   \
 //  40   60
+    // Node *root = new Node(1);
+    //     root->left = new Node(2);
+    //     root->left->left = new Node(4);
+    //     root->left->right = new Node(5);
+    //     root->right = new Node(3);
+    //     root->right->right = new Node(2);
+    //     root->right->right->left = new Node(4);
+    //     root->right->right->right = new Node(5);
 
-    Node *root = new Node(10);
-    root->left = new Node(20);
-    root->right = new Node(30);
-    root->left->left = new Node(40);
-    root->left->right = new Node(50);
-    root->right->right = new Node(60);
-    vector<int> ans = zigZagTraversal(root);
-    for (int i = 0; i < ans.size(); i++)
-    {
-        cout << ans[i] << " ";
-    }
-    cout << endl;
     return 0;
 }

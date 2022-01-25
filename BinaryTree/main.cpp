@@ -3,7 +3,7 @@
 2. print the reverse level order traversal
 3. Find the Height of Binary Tree
 4. Find the Diameter of Binary Tree
-5. Mirror of a tree 
+5. Mirror of a tree
     A_1 : Create new Tree and pass it's reference as function argument and create node with vice versa child
     A-2 : Swap the left and right links of each node and if null found the nothing to do
 6. iterative inorder
@@ -26,16 +26,16 @@
 23. Check if all leaf nodes are at same level or not
 24. Check if a Binary Tree contains duplicate subtrees of size 2 or more [ IMP ]
 25. Check if 2 trees are mirror or not
-26. Sum of Nodes on the Longest path from root to leaf node 
-27. 
-28.
-29.
-30.
-31.
-32.
-33.
-34.
-35.
+26. Sum of Nodes on the Longest path from root to leaf node
+27. Check if given graph is tree or not.  [ IMP ] -> Will do it in Graph Section
+28. Find Largest subtree sum in a tree
+29. Maximum Sum of nodes in Binary tree such that no two are adjacent
+30. Print all "K" Sum paths in a Binary tree
+31. Find LCA in a Binary tree
+32. Find distance between 2 nodes in a Binary tree
+33. Kth Ancestor of node in a Binary tree
+34. Find all Duplicate subtrees in a Binary tree [ IMP ] (Similar to Q - 24)
+35. Tree Isomorphism Problem
 */
 
 #include <bits/stdc++.h>
@@ -55,10 +55,10 @@ struct Node
 class Solution
 {
 public:
-    //Function to return the level order traversal of a tree.
+    // Function to return the level order traversal of a tree.
     vector<int> levelOrder(Node *node)
     {
-        //Your code here
+        // Your code here
         vector<int> ans;
         ans.push_back(node->data);
         queue<Node *> que;
@@ -118,7 +118,7 @@ public:
         reverse(ans.begin(), ans.end());
         return ans;
     }
-    //Function to find the height of a binary tree.
+    // Function to find the height of a binary tree.
     int tree_height(struct Node *node)
     {
         // code here
@@ -288,7 +288,7 @@ public:
     // top view of Binary Search Tree
     vector<int> topView(Node *root)
     {
-        //Your code here
+        // Your code here
         vector<int> ans;
         if (root == NULL)
             return ans;
@@ -320,7 +320,7 @@ public:
     // Bottom View of Binary Tree
     vector<int> bottomView(Node *root)
     {
-        //Your code here
+        // Your code here
         vector<int> ans;
         if (root == NULL)
             return ans;
@@ -691,7 +691,7 @@ public:
         return ans;
     }
 
-    /*This function returns true if the tree contains 
+    /*This function returns true if the tree contains
     a duplicate subtree of size 2 or more else returns false*/
     unordered_map<string, int> m;
     string solve_duplicate(Node *root)
@@ -761,22 +761,239 @@ public:
             return 0;
     }
 
-    // Sum of Nodes on the Longest path from root to leaf node  
-    vector<int> solve_longPath(Node* root){
-    if(!root) return {0, 0};
-    vector<int> a = solve_longPath(root->left);
-    vector<int> b = solve_longPath(root->right);
-    if(a[0]>b[0]) return {a[0]+1, a[1]+root->data};
-    if(a[0]<b[0]) return {b[0]+1, b[1]+root->data};
-    else{
-        return {a[0]+1, max(a[1], b[1])+root->data};
+    // Sum of Nodes on the Longest path from root to leaf node
+    vector<int> solve_longPath(Node *root)
+    {
+        if (!root)
+            return {0, 0};
+        vector<int> a = solve_longPath(root->left);
+        vector<int> b = solve_longPath(root->right);
+        if (a[0] > b[0])
+            return {a[0] + 1, a[1] + root->data};
+        if (a[0] < b[0])
+            return {b[0] + 1, b[1] + root->data};
+        else
+        {
+            return {a[0] + 1, max(a[1], b[1]) + root->data};
+        }
     }
-}
-int sumOfLongRootToLeafPath(Node *root)
-{
-    vector<int> ans = solve_longPath(root);
-    return ans[1];
-}
+    int sumOfLongRootToLeafPath(Node *root)
+    {
+        vector<int> ans = solve_longPath(root);
+        return ans[1];
+    }
+
+    // Check if given graph is tree or not.  [ IMP ] -> Will do it in Graph Section
+
+    // Find Largest subtree sum in a tree
+    int findLargestSubtreeSumRec(Node *root, int &ans)
+    {
+        if (root == NULL)
+            return 0;
+
+        int curr_sum = root->data + findLargestSubtreeSumRec(root->left, ans) + findLargestSubtreeSumRec(root->right, ans);
+        ans = max(ans, curr_sum);
+        return curr_sum;
+    }
+    int findLargestSubtreeSum(Node *root)
+    {
+        if (root == NULL)
+            return 0;
+        int ans = INT_MIN;
+        findLargestSubtreeSumRec(root, ans);
+        return ans;
+    }
+
+    // Maximum Sum of nodes in Binary tree such that no two are adjacent
+    unordered_map<Node *, int> dp;
+    int getMaxSum(Node *root)
+    {
+        if (!root)
+            return 0;
+        if (dp[root])
+            return dp[root];
+
+        int inc = root->data;
+        if (root->left)
+        {
+            inc += getMaxSum(root->left->left);
+            inc += getMaxSum(root->left->right);
+        }
+        if (root->right)
+        {
+            inc += getMaxSum(root->right->left);
+            inc += getMaxSum(root->right->right);
+        }
+
+        int exc = getMaxSum(root->left) + getMaxSum(root->right);
+        dp[root] = max(inc, exc);
+        return dp[root];
+    }
+
+    // Print all "K" Sum paths in a Binary tree - Path will used to track of paths
+    void func(Node *root, vector<int> &path, int k)
+    {
+        if (!root)
+            return;
+        path.push_back(root->data);
+        func(root->left, path, k);
+        func(root->right, path, k);
+
+        int f = 0;
+        for (int i = path.size() - 1; i >= 0; i--)
+        {
+            f += path[i];
+            if (f == k)
+            {
+                for (int j = i; j < path.size(); j++)
+                {
+                    cout << path[j] << " ";
+                }
+                cout << endl;
+            }
+        }
+        path.pop_back();
+    }
+
+    // Find LCA in a Binary tree
+    Node *lca(Node *root, int n1, int n2)
+    {
+        // Your code here
+        if (!root)
+            return NULL;
+        if (root->data == n1 || root->data == n2)
+            return root;
+
+        Node *lca1 = lca(root->left, n1, n2);
+        Node *lca2 = lca(root->right, n1, n2);
+
+        if (lca1 != NULL && lca2 != NULL)
+            return root;
+
+        if (lca1 != NULL)
+            return lca1;
+        else
+            return lca2;
+    }
+
+    // Find distance between 2 nodes in a Binary tree
+    Node *LCA(Node *root, int n1, int n2)
+    {
+        // Your code here
+        if (root == NULL)
+            return root;
+        if (root->data == n1 || root->data == n2)
+            return root;
+
+        Node *left = LCA(root->left, n1, n2);
+        Node *right = LCA(root->right, n1, n2);
+
+        if (left != NULL && right != NULL)
+            return root;
+        if (left == NULL && right == NULL)
+            return NULL;
+        if (left != NULL)
+            return LCA(root->left, n1, n2);
+
+        return LCA(root->right, n1, n2);
+    }
+    int findLevel(Node *root, int k, int level)
+    {
+        if (root == NULL)
+            return -1;
+        if (root->data == k)
+            return level;
+
+        int left = findLevel(root->left, k, level + 1);
+        if (left == -1)
+            return findLevel(root->right, k, level + 1);
+        return left;
+    }
+
+    int findDist(Node *root, int a, int b)
+    {
+        Node *lca = LCA(root, a, b);
+
+        int d1 = findLevel(lca, a, 0);
+        int d2 = findLevel(lca, b, 0);
+
+        return d1 + d2;
+    }
+
+    // Kth Ancestor of node in a Binary tree
+    Node *temp = NULL;
+    Node *kthAncestorDFS(Node *root, int node, int &k)
+    {
+        if (!root)
+            return NULL;
+
+        if (root->data == node ||
+            (temp = kthAncestorDFS(root->left, node, k)) ||
+            (temp = kthAncestorDFS(root->right, node, k)))
+        {
+            if (k > 0)
+                k--;
+
+            else if (k == 0)
+            {
+                cout << "Kth ancestor is: " << root->data;
+                return NULL;
+            }
+            return root;
+        }
+    }
+
+    // Find all Duplicate subtrees in a Binary tree [ IMP ]
+    string print_rec(Node *root, unordered_map<string, int> &m, bool &f, vector<int> &res)
+    {
+        if (!root)
+            return "";
+        string s;
+        s += print_rec(root->left, m, f, res);
+        s += to_string(root->data);
+        s += print_rec(root->right, m, f, res);
+
+        if (m[s] == 1)
+        {
+            f = true;
+            res.push_back(root->data);
+        }
+        m[s]++;
+        return s;
+    }
+    vector<Node *> printAllDups(Node *root)
+    {
+        // Code here
+        bool f = false;
+        unordered_map<string, int> m;
+        vector<int> res;
+        print_rec(root, m, f, res);
+        if (f == false)
+        {
+            cout << "-1";
+            return;
+        }
+        sort(res.begin(), res.end());
+        for (int i = 0; i < res.size(); i++)
+        {
+            cout << res[i] << " ";
+        }
+    }
+
+    // Tree Isomorphism Problem
+    bool isIsomorphic(Node *root1, Node *root2)
+    {
+        // add code here.
+        if (!root1 && !root2)
+            return true;
+        if (!root1 || !root2)
+            return false;
+        if (root1->data != root2->data)
+            return false;
+        bool l = isIsomorphic(root1->left, root2->left) && isIsomorphic(root1->right, root2->right);
+        bool r = isIsomorphic(root1->right, root2->left) && isIsomorphic(root1->left, root2->right);
+        return l || r;
+    }
 };
 int main()
 {
@@ -785,7 +1002,6 @@ int main()
     // 20       30
     //   /   \
 //  40   60
-
     Node *root = new Node(10);
     root->left = new Node(20);
     root->right = new Node(30);

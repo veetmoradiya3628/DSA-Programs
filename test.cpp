@@ -1,27 +1,39 @@
 #include <bits/stdc++.h>
 using namespace std;
-struct TreeNode
-{
-    int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode() : val(0), left(nullptr), right(nullptr) {}
-    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
-};
-
-int sum = 0;
-int sumEvenGrandparent(TreeNode* root) {
-    if(root==NULL){
-        return 0;
-    }
-    if(root->val%2==0){
-        sum+=sumEvenGrandparent(root->left->left)+sumEvenGrandparent(root->left->right)
-            +sumEvenGrandparent(root->right->left)+sumEvenGrandparent(root->right->right);
-    }
-    return sum;
-}
 int main()
 {
-    
+    int t;
+    cin >> t;
+    while (t--)
+    {
+        long int N;
+        cin >> N;
+        long int K;
+        cin >> K;
+        string str;
+        cin >> str;
+
+        int cnt = 0;
+        for (int i = 0, j = N - 1; i < j; i++, j--)
+        {
+            if (str[i] != str[j])
+            {
+                cnt++;
+            }
+        }
+        if (cnt <= K)
+        {
+            if (N % 2 == 1)
+            {
+                cout << "yes" << endl;
+            }else if((K-cnt)%2==0){
+                cout << "yes" << endl;
+            }else{
+                cout << "no" << endl;
+            }
+        }
+        else{
+            cout << "no" << endl;
+        }
+    }
 }

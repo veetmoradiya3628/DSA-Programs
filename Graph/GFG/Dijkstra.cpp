@@ -20,8 +20,8 @@ vector<int> dijkstra(int V, vector<vector<int>> adj[], int S)
 
         for(auto it : adj[prev])
         {
-            int nextDistance = it[1];
             int next = it[0];
+            int nextDistance = it[1];
 
             if(distTo[next] > dist + nextDistance){
                 distTo[next] = distTo[prev] + nextDistance;

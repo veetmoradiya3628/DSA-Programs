@@ -6,3 +6,4 @@ DSA Practice on GFG
 3. Linked List - 35 problems Solution Added
 4. Graph - 40 problems Solution Added
 5. Stack and Queue - 32 problems Solution Added
+6. Greedy - 31 problems Solution Added

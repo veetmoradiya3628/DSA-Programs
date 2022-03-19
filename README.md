@@ -7,3 +7,4 @@ DSA Practice on GFG
 4. Graph - 40 problems Solution Added
 5. Stack and Queue - 32 problems Solution Added
 6. Greedy - 31 problems Solution Added
+7. Backtracking - 20 problems Solution Added

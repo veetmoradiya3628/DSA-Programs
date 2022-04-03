@@ -12,3 +12,4 @@ DSA Practice on GFG
 7. Backtracking - 20 problems Solution Added
 8. Heap - 15 problems Solution Added
 9. String - 42 problems Solution Added
+10. Matrix - 10 problems Solution Added
